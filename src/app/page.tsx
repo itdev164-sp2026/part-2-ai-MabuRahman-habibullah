@@ -31,8 +31,8 @@ export default function HomePage() {
           </p>
         </div>
         <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          I'm a passionate web development student specializing in building modern,
-          full-stack applications with Next.js and React. I'm committed to mastering
+          I&apos;m a passionate web development student specializing in building modern,
+          full-stack applications with Next.js and React. I&apos;m committed to mastering
           AI-native development practices and creating scalable, user-centric web solutions.
         </p>
       </section>
