@@ -71,3 +71,71 @@ Keep the dark mode toggle working.
 ### Reflection
 
 > The Agent did not delete my Activity 1 code, but I made sure to review all changes before accepting them. When something looked off, I used the "Revert" option to undo the changes and gave a clearer prompt. I learned that being specific is very important, especially when telling the Agent to preserve existing files like page.tsx. I also realized that the Agent can sometimes overcomplicate solutions, so I need to guide it toward simpler fixes. Overall, this activity helped me understand how to control and work effectively with AI tools.
+
+
+
+## Activity 3: Server-Side Data with Supabase
+
+### Prompt 1
+
+**What I asked:**
+
+> Using the Supabase client at src/lib/supabase.ts, create a new Server Component
+at src/app/projects/page.tsx that:
+
+1. Fetches all records from the "projects" table in Supabase
+2. Displays them in a professional layout using shadcn/ui Card components
+   (run `npx shadcn@latest add card` if needed)
+3. Each card should show the project title, description, and a status badge
+4. The status badge should be color-coded:
+   - "active" = green
+   - "completed" = blue
+   - "archived" = gray
+
+Use @workspace context to match the styling of our existing Dashboard.
+This must be a React Server Component (async function, no "use client").
+Do NOT use useEffect or useState for data fetching.
+
+**What happened:**
+
+> The Agent mostly followed the instructions and created the projects page. However, it initially generated a Client Component using "use client" and used useEffect and useState to fetch data. This was incorrect because the assignment requires a Server Component. I reviewed the code and recognized that it was using the old client-side fetching pattern. I then corrected it by asking the Agent to refactor the code into a Server Component. After the fix, the component used an async function and fetched data directly from Supabase using await, with no React hooks involved.
+
+### Prompt 2
+
+**What I asked:**
+
+> Using the Supabase client at src/lib/supabase.ts, slightly enhance the styling of the existing Server Component at src/app/projects/page.tsx without making major structural or layout changes:
+
+Keep the current layout and structure exactly as it is
+Do NOT change the grid system or component hierarchy
+Do NOT add new sections or rearrange elements
+Improve the visual styling of existing shadcn/ui Card components:
+Add subtle shadow (shadow-sm)
+Add a smooth hover effect (hover:shadow-md transition)
+Ensure consistent padding inside cards (p-4 or p-6)
+Improve text styling:
+Make the project title slightly larger and bold (text-lg font-semibold)
+Use muted color for descriptions (text-muted-foreground)
+Add small spacing between elements (space-y-2)
+Refine the status badge appearance:
+Keep existing logic, only improve styling
+Use a pill shape (rounded-full px-2 py-1 text-xs)
+Apply soft background colors:
+"active" → light green background
+"completed" → light blue background
+"archived" → light gray background
+Improve spacing between cards:
+Slightly increase gap (gap-4 or gap-6) if needed
+Keep the same grid structure
+
+**What happened:**
+
+> The Agent successfully improved the styling without making major layout changes. It added subtle shadows, hover effects, and better spacing, which made the UI look cleaner and more professional. The text hierarchy also improved, with clearer titles and muted descriptions. The status badges were updated to look more modern with rounded shapes and softer colors. I learned that small styling changes can significantly improve the user interface without changing the structure of the code. It also showed me how to guide the AI more precisely to avoid unwanted large changes.
+
+### Reflection
+
+> Fetching data on the server feels much simpler compared to the useEffect pattern I used in Web Programming 1. Previously, I had to manage multiple things like state, loading indicators, and side effects, which made the code more complex. With Server Components, I can fetch data directly using async/await and render it immediately, which makes the code cleaner and easier to understand.
+
+One major advantage is security, since the Supabase API keys are not exposed to the browser. Another advantage is performance, because the page is already rendered with data before it reaches the user, so there is no need for loading spinners.
+
+What surprised me the most is how much simpler the process is. I expected server-side data fetching to be more complicated, but in the App Router it actually reduces complexity and improves both performance and security.
