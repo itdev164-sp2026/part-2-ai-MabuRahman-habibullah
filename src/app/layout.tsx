@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { DashboardLayout } from "@/components/dashboard-layout";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { AppShell } from "@/components/app-shell";
+import { createSupabaseServerClient } from "@/lib/supabase";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -20,11 +20,16 @@ export const metadata: Metadata = {
   description: "Web development student specializing in Next.js, React, and modern full-stack development",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body suppressHydrationWarning className={`${inter.variable} font-sans antialiased`}>
@@ -35,10 +40,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <SidebarProvider>
-              <DashboardLayout>{children}</DashboardLayout>
-              <Toaster />
-            </SidebarProvider>
+            <AppShell user={user}>{children}</AppShell>
+            <Toaster />
           </TooltipProvider>
         </ThemeProvider>
       </body>

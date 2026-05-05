@@ -193,3 +193,76 @@ Add a "New Project" button to the projects page
 Zod helps prevent junk data from entering the database by enforcing strict validation rules before the data is accepted. On the client side, it provides immediate feedback to users, improving the user experience. On the server side, it ensures that even if someone bypasses the frontend validation, invalid data is still rejected before reaching the database.
 
 In previous courses, I handled validation using basic techniques like required fields, manual if statements, and sometimes regex. These methods were scattered and easy to miss, which could allow bad data into the system. With Zod, validation is centralized, consistent, and type-safe, making the application more reliable and easier to maintain.
+
+
+
+## Activity 5: Securing the App with Supabase Auth
+
+### Prompt 1
+
+**What I asked:**
+
+> Implement a complete email/password authentication flow for this Next.js 15 App Router project using @supabase/ssr.
+
+I requested:
+
+Server-side Supabase client utilities for Server Components, Server Actions, and Middleware
+A login page at /login using shadcn/ui with both Sign In and Sign Up
+Middleware to refresh sessions and protect /projects routes
+Use of supabase.auth.getUser() instead of getSession()
+A Sign Out button in the sidebar that only appears when a user is authenticated
+Updating all data queries to use the authenticated Supabase client so RLS policies work correctly
+
+I also instructed the agent to integrate everything without breaking existing functionality.
+
+**What happened:**
+
+> The Agent handled most of the authentication system in one pass and created/modified multiple files, including:
+
+src/lib/supabase/server.ts for server-side client handling
+src/lib/supabase/middleware.ts for middleware client setup
+src/middleware.ts to protect routes and manage authentication
+src/app/(auth)/login/page.tsx for login and signup UI
+src/components/app-sidebar.tsx to add the Sign Out button
+src/app/layout.tsx to fetch and pass the authenticated user
+src/app/projects/page.tsx to use authenticated queries
+src/app/actions.ts to handle inserts with authentication
+
+The login system worked, middleware protected routes, and users were able to sign in and access their own data. However, some small issues required follow-up fixes, such as authentication checks and redirect behavior.
+
+### Prompt 2
+
+**What I asked:**
+
+> Review my existing Supabase authentication setup and make minimal, targeted fixes without restructuring the project.
+
+Specifically:
+
+Ensure middleware uses supabase.auth.getUser() instead of getSession()
+Fix redirect behavior for authenticated and unauthenticated users
+Ensure /login is publicly accessible
+Verify cookies are correctly handled in Server Actions
+Ensure database queries respect RLS policies
+Do not rewrite the project — only fix issues
+
+**What happened:**
+
+> The Agent made targeted improvements without changing the overall structure:
+
+Replaced getSession() with getUser() for secure authentication
+Fixed redirect issues so users are properly sent to /login when not authenticated
+Ensured /login remained accessible without authentication
+Verified cookies were correctly set during login and signup
+Confirmed that queries now correctly respect Row Level Security
+
+These fixes improved the stability and security of the app without breaking existing features.
+
+### Reflection
+
+> The Agent was able to generate a full authentication system, including middleware, login UI, and Supabase integration, in a single prompt. However, it still required careful review and refinement.
+
+One key learning point was the importance of using getUser() instead of getSession(). While getSession() reads from cookies, it is not fully secure. getUser() verifies the user with the Supabase Auth server, making it the correct choice for middleware.
+
+I was surprised by how many parts of the application needed to change to support authentication. It affected routing, layout, components, server actions, and database queries.
+
+Middleware-based authentication is more secure than checking authentication inside individual pages because it blocks unauthorized users before the page even loads. This prevents data leaks and ensures consistent protection across the app.

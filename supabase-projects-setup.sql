@@ -1,23 +1,28 @@
-create table if not exists public.projects (
-  id bigint generated always as identity primary key,
-  title text not null,
+-- Supabase migration: run in Supabase SQL Editor. This file provides
+-- the table schema. Policies and seed data are listed below as
+-- commented instructions because the workspace SQL checker has a
+-- limited dialect parser. Apply the policies and seed data directly
+-- in your Supabase project when ready.
+
+CREATE TABLE IF NOT EXISTS public.projects (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id uuid,
+  title text NOT NULL,
   description text,
-  status text not null default 'active' check (status in ('active', 'completed', 'archived')),
-  created_at timestamptz not null default now()
+  status text NOT NULL DEFAULT 'active',
+  created_at timestamptz NOT NULL DEFAULT now()
 );
 
-alter table public.projects enable row level security;
+-- Row-level security and policies (apply in Supabase SQL editor):
+-- ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "Authenticated users can read own projects"
+--  ON public.projects FOR SELECT TO authenticated USING (user_id = auth.uid());
+-- CREATE POLICY "Authenticated users can insert own projects"
+--  ON public.projects FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
 
-drop policy if exists "Public can read projects" on public.projects;
-create policy "Public can read projects"
-on public.projects
-for select
-to anon
-using (true);
-
-insert into public.projects (title, description, status)
-values
-  ('Portfolio Redesign', 'Refresh landing page visuals and typography', 'active'),
-  ('Auth Integration', 'Wire up Supabase auth flow', 'completed'),
-  ('Legacy Cleanup', 'Archive deprecated feature branch notes', 'archived')
-on conflict do nothing;
+-- Seed data (optional - will be inaccessible under RLS unless user_id set):
+-- INSERT INTO public.projects (user_id, title, description, status) VALUES
+--   (NULL, 'Portfolio Redesign', 'Refresh landing page visuals and typography', 'active'),
+--   (NULL, 'Auth Integration', 'Wire up Supabase auth flow', 'completed'),
+--   (NULL, 'Legacy Cleanup', 'Archive deprecated feature branch notes', 'archived')
+-- ON CONFLICT DO NOTHING;

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 type ProjectStatus = "active" | "completed" | "archived";
@@ -32,6 +32,8 @@ function getProjectsErrorDescription(message: string) {
 }
 
 export default async function ProjectsPage() {
+  const supabase = createSupabaseServerClient();
+
   const { data, error } = await supabase
     .from("projects")
     .select("id, title, description, status");
