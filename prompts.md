@@ -139,3 +139,57 @@ Keep the same grid structure
 One major advantage is security, since the Supabase API keys are not exposed to the browser. Another advantage is performance, because the page is already rendered with data before it reaches the user, so there is no need for loading spinners.
 
 What surprised me the most is how much simpler the process is. I expected server-side data fetching to be more complicated, but in the App Router it actually reduces complexity and improves both performance and security.
+
+
+
+## Activity 4: AI-Driven Forms & Validation
+
+### Prompt 1
+
+**What I asked:**
+
+> Create a Zod validation schema in a new file src/lib/schemas.ts for a "Project"
+with the following fields:
+
+title: string, minimum 3 characters, with a custom error message
+"Title must be at least 3 characters"
+description: string, minimum 10 characters, with a custom error message
+"Description must be at least 10 characters"
+status: enum with values "active", "completed", "archived"
+
+Export the schema and also export the inferred TypeScript type using z.infer.
+
+**What happened:**
+
+> The Agent successfully created the schema using Zod. It defined all three fields correctly with the required validation rules and custom error messages. It also exported both the schema and the inferred TypeScript type using z.infer. The enum values matched the database values ("active", "completed", "archived"), which ensured consistency between the schema and Supabase.
+
+### Prompt 2
+
+**What I asked:**
+
+> Using the Zod schema from src/lib/schemas.ts, do the following:
+
+Create a form component at src/components/project-form.tsx that:
+Uses react-hook-form with zodResolver
+Uses shadcn/ui components (Field, Input, Textarea, Select)
+Displays validation errors
+Shows a toast on success
+Create a Server Action in src/app/actions.ts that:
+Uses "use server"
+Validates data with Zod
+Inserts into Supabase
+Create a page at src/app/projects/new/page.tsx to render the form
+Add a "New Project" button to the projects page
+
+**What happened:**
+
+> The Agent generated all required files and connected them correctly. The form component used react-hook-form with zodResolver and displayed inline validation errors under each field. The Server Action included "use server" and successfully inserted data into Supabase. However, initially, the server-side validation was missing, so I had to verify and ensure Zod validation was applied before inserting. After confirming, the form successfully submitted data, and the toast notification appeared when a project was created.
+
+
+### Reflection
+
+> The Schema-First approach with Zod completely changes how I think about form validation. Instead of writing validation rules in multiple places (HTML attributes, JavaScript checks, and backend logic), everything is defined once in a single schema. This schema becomes the source of truth for both the client and server.
+
+Zod helps prevent junk data from entering the database by enforcing strict validation rules before the data is accepted. On the client side, it provides immediate feedback to users, improving the user experience. On the server side, it ensures that even if someone bypasses the frontend validation, invalid data is still rejected before reaching the database.
+
+In previous courses, I handled validation using basic techniques like required fields, manual if statements, and sometimes regex. These methods were scattered and easy to miss, which could allow bad data into the system. With Zod, validation is centralized, consistent, and type-safe, making the application more reliable and easier to maintain.
