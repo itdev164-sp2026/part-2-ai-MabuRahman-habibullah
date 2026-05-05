@@ -1,4 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
@@ -39,10 +41,20 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-6 sm:space-y-8">
       <section className="space-y-2 px-1">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Projects</h1>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          A live view of your project records from Supabase.
-        </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Projects</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">
+              A live view of your project records from Supabase.
+            </p>
+          </div>
+
+          <div>
+            <Button asChild>
+              <Link href="/projects/new">New Project</Link>
+            </Button>
+          </div>
+        </div>
       </section>
 
       {error ? (

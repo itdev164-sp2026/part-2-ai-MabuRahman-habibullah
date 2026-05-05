@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           <TooltipProvider>
             <SidebarProvider>
               <DashboardLayout>{children}</DashboardLayout>
+              <Toaster />
             </SidebarProvider>
           </TooltipProvider>
         </ThemeProvider>
