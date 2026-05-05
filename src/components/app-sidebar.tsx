@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FolderOpen, Home, Settings } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+import { FolderOpen, Home, Settings, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,6 +20,8 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { signOutUser } from "@/app/actions";
 
 const navigationItems = [
   {
@@ -46,7 +49,11 @@ function isRouteActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  user: User | null;
+};
+
+export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -104,6 +111,19 @@ export function AppSidebar() {
       <SidebarFooter className="gap-1.5 border-t border-sidebar-border/70 px-4 py-4">
         <p className="text-xs font-medium text-sidebar-foreground">Mabu Rahman Habibullah</p>
         <p className="text-xs text-sidebar-foreground/70">Web Development Student</p>
+
+        {user ? (
+          <form action={signOutUser} className="mt-2">
+            <Button
+              type="submit"
+              variant="outline"
+              className="h-9 w-full justify-start border-sidebar-border/70 bg-sidebar-accent/20 text-sidebar-foreground hover:bg-sidebar-accent/40"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign Out</span>
+            </Button>
+          </form>
+        ) : null}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
