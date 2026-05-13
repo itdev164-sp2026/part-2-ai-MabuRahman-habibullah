@@ -1,11 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-
 import { assertSupabaseConfig } from "./config";
 
-export function createSupabaseServerClient() {
+export async function createSupabaseServerClient() {
   const { supabaseUrl, supabaseAnonKey } = assertSupabaseConfig();
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -13,7 +12,7 @@ export function createSupabaseServerClient() {
         return cookieStore.getAll();
       },
       setAll() {
-        // Server Components cannot write cookies directly.
+        // Server Components cannot reliably set cookies
       },
     },
   });
