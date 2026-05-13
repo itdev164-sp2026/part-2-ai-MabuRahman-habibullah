@@ -11,14 +11,13 @@ export async function createSupabaseServerActionClient() {
       getAll() {
         return cookieStore.getAll();
       },
-
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
             cookieStore.set(name, value, options);
           });
         } catch {
-          // Best effort cookie handling in server actions
+          // best effort
         }
       },
     },
