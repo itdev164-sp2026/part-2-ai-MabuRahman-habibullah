@@ -3,13 +3,9 @@ import { cookies } from "next/headers";
 
 import { assertSupabaseConfig } from "./config";
 
-export async function createClient() {
-  return createSupabaseServerActionClient();
-}
-
-export async function createSupabaseServerActionClient() {
+export function createSupabaseServerActionClient() {
   const { supabaseUrl, supabaseAnonKey } = assertSupabaseConfig();
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
