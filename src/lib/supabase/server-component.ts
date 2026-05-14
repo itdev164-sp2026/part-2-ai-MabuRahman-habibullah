@@ -5,7 +5,7 @@ import { assertSupabaseConfig } from "./config";
 
 export function createSupabaseServerComponentClient() {
   const { supabaseUrl, supabaseAnonKey } = assertSupabaseConfig();
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
