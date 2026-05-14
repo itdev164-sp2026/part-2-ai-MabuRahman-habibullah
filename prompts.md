@@ -266,3 +266,80 @@ One key learning point was the importance of using getUser() instead of getSessi
 I was surprised by how many parts of the application needed to change to support authentication. It affected routing, layout, components, server actions, and database queries.
 
 Middleware-based authentication is more secure than checking authentication inside individual pages because it blocks unauthorized users before the page even loads. This prevents data leaks and ensures consistent protection across the app.
+
+
+
+
+## Activity 6: Deployment, Webhooks, & AI-Testing
+
+### Prompt 1
+
+**What I asked:**
+
+> I have a Next.js app with Supabase Auth. Using @workspace context to
+understand the app structure, write an End-to-End (E2E) test file at
+tests/auth.spec.ts using Playwright.
+
+The tests should verify:
+
+1. LOGIN PAGE VISIBLE: Navigate to /login and confirm the login form
+   is visible (check for email input, password input, and submit button).
+
+2. REDIRECT AFTER LOGIN: After a successful login with valid credentials,
+   the user is redirected to the dashboard or projects page.
+
+3. SIDEBAR NAVIGATION: After login, verify that the sidebar navigation
+   links are visible: "Overview", "Projects", and "Settings".
+
+Requirements:
+- Use role-based locators (getByRole, getByLabel, getByText) instead of
+  CSS selectors or test IDs. This makes tests more accessible and resilient
+  to UI changes.
+- Add clear test descriptions that explain what each test verifies.
+- Handle the async nature of navigation and page loads with proper
+  Playwright waiting strategies.
+- Read test credentials from process.env.TEST_USER_EMAIL and
+  process.env.TEST_USER_PASSWORD. Do not hardcode credentials. If those
+  variables are not set, the credentialed tests should skip with a clear
+  message rather than fail.
+
+
+**What happened:**
+
+> The AI generated a Playwright test suite using role-based locators like getByRole and getByLabel, and it correctly understood the login flow (email/password authentication and redirect after login). The initial structure of the tests matched the Supabase authentication flow and Next.js routing.
+
+However, the sidebar navigation expectations were slightly incorrect because the actual application UI did not fully match the assumed structure . The tests ran successfully but failed during the sidebar navigation assertions due to strict mode violations and missing UI elements.
+
+### Prompt 2
+
+**What I asked:**
+
+> Fix Playwright test failures caused by strict mode violations and missing sidebar navigation elements. Update selectors to avoid multiple matches and align tests with the actual UI structure.
+
+**What happened:**
+
+> The debugging process was iterative. First, the issue was strict mode violations caused by multiple matching elements for "Sign In" and "Projects". I refined the selectors by scoping them to the login form and sidebar navigation using locator("form") and locator("nav").
+
+After fixing selector ambiguity, a second issue appeared where the tests were expecting sidebar links that did not exist in the actual application. I updated the test to only assert existing links such as "Projects", which resolved the final failure.
+
+It took approximately 2–3 iterations of running tests, analyzing errors, and adjusting selectors before all tests passed successfully.
+
+### Reflection
+
+> Having AI generate and debug Playwright tests significantly increased confidence in deploying the application. The AI was able to quickly identify issues like selector ambiguity and strict mode violations, which are common but time-consuming to debug manually.
+
+However, it also highlighted the importance of ensuring that test assumptions match the real UI. The AI sometimes assumed features (like sidebar links) that were not implemented, which required manual correction.
+
+Compared to manual testing, AI-assisted testing was much faster for writing and fixing boilerplate test code, but still required human verification to ensure correctness of UI expectations.
+
+### Course Reflection
+
+> Looking back at Activities 1 through 6, my prompting strategy has changed significantly. In Activity 1, my prompts were broad and focused mainly on “building features” without much technical precision. I gave general instructions and expected the AI to understand all requirements correctly in one step.
+
+As the course progressed, I started writing much more structured and detailed prompts. Instead of asking for complete features at once, I broke tasks into smaller parts such as UI, backend logic, validation, authentication, and testing. I also learned to include constraints like “do not change layout,” “use server components only,” or “use role-based locators,” which helped the AI produce more accurate results.
+
+Another major improvement in my prompting strategy was debugging. In later activities, especially with Playwright testing and Supabase authentication, I learned to use follow-up prompts based on errors. Instead of rewriting everything, I refined specific parts of the code step by step until the issue was resolved. This iterative approach made development much more efficient.
+
+The most important thing I learned about working with AI coding tools is that the quality of the output depends heavily on the quality of the prompt. AI is very powerful at generating and fixing code, but it still requires clear direction and human review. It does not automatically understand project context perfectly, especially when UI expectations or architecture assumptions are involved.
+
+Overall, I now see AI as a development partner rather than an automatic code generator. My role is to guide it with precise instructions, validate its output, and refine it until it matches the real requirements of the project.
