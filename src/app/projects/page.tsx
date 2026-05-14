@@ -32,7 +32,7 @@ function getProjectsErrorDescription(message: string) {
 }
 
 export default async function ProjectsPage() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from("projects")
