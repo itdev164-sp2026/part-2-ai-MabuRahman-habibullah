@@ -38,7 +38,7 @@ export async function authenticateUser(
     };
   }
 
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
 
   if (parsed.data.mode === "signin") {
     const { error } = await supabase.auth.signInWithPassword({
