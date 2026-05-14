@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import { createSupabaseServerActionClient } from "@/lib/supabase"
 
 export async function signOutUser() {
-  const supabase = createSupabaseServerActionClient()
+  const supabase = await createSupabaseServerActionClient()
 
   await supabase.auth.signOut()
   redirect("/login")
@@ -20,7 +20,7 @@ export async function createProject(data: Project) {
   }
 
   const parsed = result.data
-  const supabase = createSupabaseServerActionClient()
+  const supabase = await createSupabaseServerActionClient()
 
   const {
     data: { user },
